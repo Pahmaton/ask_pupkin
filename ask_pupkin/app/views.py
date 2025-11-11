@@ -36,10 +36,12 @@ def questions_by_tag(request, tag):
         "tag": tag
     })
 
-# TODO cтраница одного вопроса со списком ответов (URL = /question/35/)
+# cтраница одного вопроса со списком ответов (URL = /question/35/)
 def question(request, question_id):
     return render(request, "question.html", {"question": QUESTIONS[question_id]})
 
-# TODO форма логина (URL = /login/)
+# форма логина (URL = /login/)
+def login_form(request):
+    return render(request, "login.html")
 # TODO форма регистрации (URL = /signup/)
 # TODO форма создания вопроса (URL = /ask/)

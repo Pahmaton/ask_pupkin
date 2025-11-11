@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block account %}
+{% include 'authorized.html' %}
+{% endblock %}
 {% block main %}
 <h3 class="me-3 mt-2">Tag: {{ tag }}</h3>
 {% include "questions_list.html" %}
