@@ -43,5 +43,9 @@ def question(request, question_id):
 # форма логина (URL = /login/)
 def login_form(request):
     return render(request, "login.html")
-# TODO форма регистрации (URL = /signup/)
+
+# форма регистрации (URL = /signup/)
+def register_form(request):
+    return render(request, "register.html")
+
 # TODO форма создания вопроса (URL = /ask/)
