@@ -13,16 +13,20 @@ for i in range(30):
 
 # cписок новых вопросов (главная страница) (URL = /)
 def questions(request):
-    return render(request, "questions.html", {"questions": QUESTIONS})
+    return render(request, "questions.html", {
+        "questions": QUESTIONS, 
+        "question_type": "new"
+    })
 
-# TODO cписок “лучших” вопросов (URL = /hot/)
+# cписок “лучших” вопросов (URL = /hot/)
 def hot_questions(request):
     return render(request, "questions.html", {
         "questions": sorted(
             QUESTIONS, 
             key=lambda q: len(q['answers']), 
             reverse=True
-        )
+        ),
+        "question_type": "hot"
     })
 
 # TODO cписок вопросов по тэгу (URL = /tag/blablabla/)

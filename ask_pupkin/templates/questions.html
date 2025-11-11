@@ -2,8 +2,13 @@
 {% load static %}
 {% block main %}
 <div class="d-flex align-items-center mt-2">
+    {% if question_type == 'new' %}
     <h3 class="me-3">New Questions</h3>
-    <a href="#">Hot questions</a>
+    <a href="{% url 'hot_questions' %}">Hot questions</a>
+    {% else %}
+    <h3 class="me-3">Hot Questions</h3>
+    <a href="{% url 'questions' %}">New questions</a>
+    {% endif %}
 </div>
 <div class="col mt-4">
     {% for question in questions %}
