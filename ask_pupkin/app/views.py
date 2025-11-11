@@ -16,6 +16,15 @@ def questions(request):
     return render(request, "questions.html", {"questions": QUESTIONS})
 
 # TODO cписок “лучших” вопросов (URL = /hot/)
+def hot_questions(request):
+    return render(request, "questions.html", {
+        "questions": sorted(
+            QUESTIONS, 
+            key=lambda q: len(q['answers']), 
+            reverse=True
+        )
+    })
+
 # TODO cписок вопросов по тэгу (URL = /tag/blablabla/)
 # TODO cтраница одного вопроса со списком ответов (URL = /question/35/)
 # TODO форма логина (URL = /login/)

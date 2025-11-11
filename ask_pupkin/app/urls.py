@@ -1,6 +1,7 @@
 from django.urls import path
-from app.views import questions
+from app import views
 
 urlpatterns = [
-    path('', questions, name="questions")
+    path('', views.questions, name="questions"),
+    path('hot/', views.hot_questions, name="hot_questions")
 ]
