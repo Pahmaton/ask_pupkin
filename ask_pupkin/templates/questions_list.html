@@ -1,0 +1,43 @@
+{% load static %}
+<div class="col mt-4">
+    {% for question in questions %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-1">
+                    <img src="{% static 'images/avatar.jpg' %}" width="42" height="42" class="me-2" alt="avatar image">
+                    <div class="vote-box mt-2">
+                        <button class="btn btn-outline-success vote-btn up">▲</button>
+                        <span class="vote-count">5</span>
+                        <button class="btn btn-outline-danger vote-btn down">▼</button>
+                    </div>
+                </div>
+                <div class="col-11 d-flex flex-column" style="padding-left: 12px;">
+                    <h5 class="card-title"><a href="#">{{ question.title }}</a></h5>
+                    {{ question.text }}
+
+                    <div class="mt-auto">
+                        <p class="mb-0">
+                            <a href="#" class="me-2">answers({{ question.answers|length }})</a>
+                            Tags:
+                            {% for tag in question.tags %}
+                            <a href="#">{{ tag }}</a>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <nav>
+        <ul class="pagination mt-4">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">53</a></li>
+        </ul>
+    </nav>
+</div>

@@ -29,7 +29,13 @@ def hot_questions(request):
         "question_type": "hot"
     })
 
-# TODO cписок вопросов по тэгу (URL = /tag/blablabla/)
+# cписок вопросов по тэгу (URL = /tag/blablabla/)
+def questions_by_tag(request, tag):
+    return render(request, "questions_by_tag.html", {
+        "questions": [q for q in QUESTIONS if tag in q['tags']],
+        "tag": tag
+    })
+
 # TODO cтраница одного вопроса со списком ответов (URL = /question/35/)
 # TODO форма логина (URL = /login/)
 # TODO форма регистрации (URL = /signup/)
