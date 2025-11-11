@@ -1,3 +1,4 @@
+from random import randint
 from django.shortcuts import render
 
 QUESTIONS = []
@@ -5,7 +6,9 @@ for i in range(30):
     QUESTIONS.append({
         'title': f'How to build moon park {i}?',
         'id': i,
-        'text': f'guys, i have trouble... I cant build moon park {i}'
+        'text': f'guys, i have trouble... I cant build moon park {i}',
+        'tags': ['black-jack', 'bender'],
+        'answers': [f'you can build moon park {i} with {k} friends' for k in range(randint(0,3))]
     })
 
 # cписок новых вопросов (главная страница) (URL = /)

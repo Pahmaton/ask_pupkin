@@ -24,10 +24,11 @@
 
                     <div class="mt-auto">
                         <p class="mb-0">
-                            <a href="#" class="me-2">answers(3)</a>
+                            <a href="#" class="me-2">answers({{ question.answers|length }})</a>
                             Tags:
-                            <a href="#">black-jack</a>
-                            <a href="#">bender</a>
+                            {% for tag in question.tags %}
+                            <a href="#">{{ tag }}</a>
+                            {% endfor %}
                         </p>
                     </div>
                 </div>
