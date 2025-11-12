@@ -81,3 +81,6 @@ def register_form(request):
 # форма создания вопроса (URL = /ask/)
 def add_question_form(request):
     return render(request, "add_question.html")
+
+def profile_form(request):
+    return render(request, "profile.html")
