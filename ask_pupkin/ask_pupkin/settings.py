@@ -64,6 +64,17 @@ WSGI_APPLICATION = 'ask_pupkin.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_db',
+        'USER': 'django_user',
+        'PASSWORD': 'django_pass',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
