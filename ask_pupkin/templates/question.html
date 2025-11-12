@@ -21,7 +21,7 @@
             <p class="mb-0">
                 Tags:
                 {% for tag in question.tags %}
-                <a href="#">{{ tag }}</a>
+                <a href="{% url "questions_by_tag" tag %}">{{ tag }}</a>
                 {% endfor %}
             </p>
         </div>

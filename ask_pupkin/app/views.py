@@ -48,4 +48,6 @@ def login_form(request):
 def register_form(request):
     return render(request, "register.html")
 
-# TODO форма создания вопроса (URL = /ask/)
+# форма создания вопроса (URL = /ask/)
+def add_question_form(request):
+    return render(request, "add_question.html")

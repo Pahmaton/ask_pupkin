@@ -16,8 +16,8 @@
                 <a class="navbar-brand" href="{% url 'questions' %}"><h2>AskPupkin</h2></a>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">ASK!</button>
                 </form>
+                <a href="{% url "add_question" %}" class="btn btn-outline-success">ASK!</a>
                 {% block account %}
                 {% endblock %}
             </div>

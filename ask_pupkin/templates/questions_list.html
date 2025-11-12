@@ -21,7 +21,7 @@
                             <a href="#" class="me-2">answers({{ question.answers|length }})</a>
                             Tags:
                             {% for tag in question.tags %}
-                            <a href="#">{{ tag }}</a>
+                            <a href="{% url "questions_by_tag" tag %}">{{ tag }}</a>
                             {% endfor %}
                         </p>
                     </div>
