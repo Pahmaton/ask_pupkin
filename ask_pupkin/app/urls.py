@@ -1,4 +1,7 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
+
 from app import views
 
 urlpatterns = [
@@ -11,3 +14,6 @@ urlpatterns = [
     path('ask/', views.add_question_form, name="add_question"),
     path('profile/', views.profile_form, name="profile")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
