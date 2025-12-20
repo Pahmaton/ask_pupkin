@@ -1,0 +1,44 @@
+{% load static %}
+<div class="col mt-4">
+    {% for question in questions %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-1 text-center">
+                    <img src="{{ question.author.avatar.url }}" 
+                         width="42" height="42">
+                    <div class="vote-box mt-2">
+                        <button class="btn btn-outline-success vote-btn up">▲</button>
+                        <span class="vote-count">{{ question.rating }}</span>
+                        <button class="btn btn-outline-danger vote-btn down">▼</button>
+                    </div>
+                </div>
+                <div class="col-11 d-flex flex-column" style="padding-left: 12px;">
+                    <h5 class="card-title">
+                        <a href="{% url 'question' question.id %}">{{ question.title }}</a>
+                    </h5>
+                    <p>{{ question.text|truncatechars:300 }}</p>
+
+                    <div class="mt-auto">
+                        <p class="mb-0">
+                            <a href="{% url 'question' question.id %}" class="me-2">
+                                answers({{ question.answers.count }})
+                            </a>
+                            Tags:
+                            {% for tag in question.tags.all %}
+                                <a href="{% url 'questions_by_tag' tag.name %}" class="me-2">
+                                    {{ tag.name }}
+                                </a> 
+                            {% empty %}
+                                <span class="text-muted">no tags</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {% include 'pagination.html' %}
+</div>

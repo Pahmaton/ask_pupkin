@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block account %}
+{% include 'authorized.html' %}
+{% endblock %}
+{% block main %}
+<div class="d-flex align-items-center mt-2">
+    {% if question_type == 'new' %}
+    <h3 class="me-3">New Questions</h3>
+    <a href="{% url 'hot_questions' %}">Hot questions</a>
+    {% else %}
+    <h3 class="me-3">Hot Questions</h3>
+    <a href="{% url 'questions' %}">New questions</a>
+    {% endif %}
+</div>
+{% include "questions_list.html" %}
+{% endblock main %}

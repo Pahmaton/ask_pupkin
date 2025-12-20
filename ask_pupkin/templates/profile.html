@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block account %}
+{% include "authorized.html" %}
+{% endblock account %}
+{% block main %}
+<h3 class="me-3 mt-2">Settings: Dr. Pepper</h3>
+<form class="mt-4">
+    <div class="row mb-3 align-items-center">
+        <label for="login" class="col-2 col-form-label text-start">Login</label>
+        <div class="col-10">
+        <input type="text" class="form-control" id="login">
+        </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+        <label for="email" class="col-2 col-form-label text-start">Email</label>
+        <div class="col-10">
+        <input type="email" class="form-control" id="email">
+        </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+        <label for="nickname" class="col-2 col-form-label text-start">NickName</label>
+        <div class="col-10">
+        <input type="text" class="form-control" id="nickname">
+        </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+        <label for="formFile" class="col-2 col-form-label text-start">Upload avatar</label>
+        <div class="col-10">
+        <input class="form-control" type="file" id="formFile">
+        </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+        <div class="col-2"></div>
+        <div class="col-10">
+            <button type="submit" class="btn btn-primary px-4">Save</button>
+        </div>
+    </div>
+</form>
+{% endblock main %}
