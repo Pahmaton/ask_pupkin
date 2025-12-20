@@ -210,3 +210,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# django media
+ask_pupkin/media/avatars/*
+!ask_pupkin/media/avatars/default.jpg
+
+# mac
+.DS_Store

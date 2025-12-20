@@ -5,64 +5,68 @@
 {% endblock %}
 {% block main %}
 <div class="row">
-    <div class="col-2">
-        <img src="../static/images/avatar.jpg" width="96" height="96" class="me-2" alt="avatar image">
+    <div class="col-2 text-center">
+        <img src="{{ question.author.avatar.url }}"
+             width="96" height="96" class="me-2 rounded-circle" alt="avatar image">
         <div class="vote-box mt-2">
             <button class="btn btn-outline-success vote-btn up">▲</button>
-            <span class="vote-count">5</span>
+            <span class="vote-count">{{ question.rating }}</span>
             <button class="btn btn-outline-danger vote-btn down">▼</button>
         </div>
     </div>
     <div class="col-10 d-flex flex-column" style="padding-left: 12px;">
         <h3>{{ question.title }}</h3>
-        {{ question.text }}
+        <p>{{ question.text }}</p>
 
         <div class="mt-auto">
             <p class="mb-0">
                 Tags:
-                {% for tag in question.tags %}
-                <a href="{% url "questions_by_tag" tag %}">{{ tag }}</a>
+                {% for tag in question.tags.all %}
+                    <a href="{% url 'questions_by_tag' tag.name %}" class="me-2">
+                        {{ tag.name }}
+                    </a>
+                {% empty %}
+                    <span class="text-muted">no tags</span>
                 {% endfor %}
             </p>
         </div>
     </div>
-    <div class="mb-3"></div>
 </div>
-<div class="border-top">
-    <div class="col mt-3 border-bottom">
-        {% for answer in question.answers %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-1">
-                        <img src="{% static 'images/avatar.jpg' %}" width="42" height="42" class="me-2" alt="avatar image">
-                        <div class="vote-box mt-2">
-                            <button class="btn btn-outline-success vote-btn up">▲</button>
-                            <span class="vote-count">5</span>
-                            <button class="btn btn-outline-danger vote-btn down">▼</button>
-                        </div>
+
+<hr>
+
+<div class="col mt-3">
+    {% for answer in answers %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-1 text-center">
+                    <img src="{{ answer.author.avatar.url }}"
+                         width="42" height="42" class="me-2 rounded-circle" alt="avatar image">
+                    <div class="vote-box mt-2">
+                        <button class="btn btn-outline-success vote-btn up">▲</button>
+                        <span class="vote-count">{{ answer.rating }}</span>
+                        <button class="btn btn-outline-danger vote-btn down">▼</button>
                     </div>
-                    <div class="col-11 d-flex flex-column" style="padding-left: 12px;">
-                        {{ answer }}
-                        {% if '0 friends' in answer%}
-                        <div class="mt-auto">
-                            <p>
-                                <small class="px-2 py-1 fw-semibold text-success-emphasis bg-success-subtle border border-success-subtle rounded-2 me-2">
-                                    Correct!
-                                </small>
-                            </p>
-                        </div>
-                        {% endif %}
+                </div>
+
+                <div class="col-11 d-flex flex-column" style="padding-left: 12px;">
+                    <p>{{ answer.text }}</p>
+                    <div class="text-muted small mt-auto">
+                        Answered by: {{ answer.author.user.username }} • {{ answer.created_at|date:"Y-m-d H:i" }}
                     </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
-        {% include 'pagination.html' %}
     </div>
+    {% empty %}
+    <p class="text-muted">No answers yet.</p>
+    {% endfor %}
+    {% include 'pagination.html' %}
 </div>
+
 <form class="mt-3 mb-5">
-    <textarea name="" class="form-control mb-3" rows="7" placeholder="Enter your answer here..." id=""></textarea>
+    <textarea name="text" class="form-control mb-3" rows="7" placeholder="Enter your answer here..."></textarea>
     <button class="btn btn-primary" type="submit">Answer</button>
 </form>
 {% endblock %}

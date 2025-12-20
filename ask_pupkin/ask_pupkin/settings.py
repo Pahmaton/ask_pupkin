@@ -19,6 +19,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'app.apps.AppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +62,17 @@ WSGI_APPLICATION = 'ask_pupkin.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_db',
+        'USER': 'django_user',
+        'PASSWORD': 'django_pass',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 DATABASES = {
     'default': {
@@ -108,6 +120,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
    BASE_DIR / 'static',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

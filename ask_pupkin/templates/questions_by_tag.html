@@ -3,6 +3,6 @@
 {% include 'authorized.html' %}
 {% endblock %}
 {% block main %}
-<h3 class="me-3 mt-2">Tag: {{ tag }}</h3>
+<h3 class="me-3 mt-2">Tag: {{ tag.name }}</h3>
 {% include "questions_list.html" %}
 {% endblock %}
