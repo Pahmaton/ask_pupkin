@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Question, Tag
+from .models import Question, Tag, Profile
 
 
 def paginate(objects_list, request, per_page=10):
@@ -60,3 +60,10 @@ def add_question_form(request):
 # форма профиля
 def profile_form(request):
     return render(request, "profile.html")
+
+# страница лучших пользователей сайта
+def best_members(request, username):
+    if username not in ["MrFreeman", "DrHouse", "Bender", "QueenVictoria", "V_Pupkin"]:
+        return redirect("questions")
+    member = get_object_or_404(Profile, user__username=username)
+    return render(request, "best_members.html", {"member": member})

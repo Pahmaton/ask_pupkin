@@ -12,7 +12,8 @@ urlpatterns = [
     path('login/', views.login_form, name="login"),
     path('signup/', views.register_form, name="register"),
     path('ask/', views.add_question_form, name="add_question"),
-    path('profile/', views.profile_form, name="profile")
+    path('profile/', views.profile_form, name="profile"),
+    path('best_member/<str:username>', views.best_members, name="best_member")
 ]
 
 if settings.DEBUG:
