@@ -16,7 +16,7 @@ class Profile(models.Model):
     def avatar_url(self):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar_url
-        return f"{settings.MEDIA_URL}/avatars/default.jpg"
+        return f"{settings.STATIC_URL}images/default.jpg"
 
     class Meta:
         verbose_name = "Профиль"
