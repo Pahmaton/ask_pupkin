@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-from app.forms import LoginForm, QuestionForm, RegistrationForm
+from app.forms import AnswerForm, LoginForm, QuestionForm, RegistrationForm
 from app.models import Profile, Question, Tag
 
 
@@ -42,23 +43,6 @@ def questions_by_tag(request, tag):
     qs = tag_obj.questions.all().select_related('author__user').prefetch_related('tags').annotate(answers_count=Count('answers'))
     page = paginate(qs, request, per_page=20)
     return render(request, "questions_by_tag.html", {"questions": page.object_list, "page_obj": page, "tag": tag_obj})
-
-
-# страница одного вопроса со списком ответов (URL = /question/<id>/)
-def question(request, question_id):
-    q = get_object_or_404(
-        Question.objects.select_related('author__user').prefetch_related('tags'),
-        pk=question_id
-    )
-
-    answers_qs = q.answers.select_related('author__user').order_by('created_at')
-
-    answers_page = paginate(answers_qs, request, per_page=30)
-    return render(request, "question.html", {
-        "question": q,
-        "answers": answers_page.object_list,
-        "page_obj": answers_page
-    })
 
 # форма профиля
 def profile_form(request):
@@ -131,3 +115,30 @@ def add_question_view(request):
     else:
         form = QuestionForm()
     return render(request, "add_question.html", {"form": form})
+
+# страница одного вопроса со списком ответов (URL = /question/<id>/)
+def question_view(request, question_id):
+    q = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user.profile
+            answer.question = q
+            answer.save()
+            return redirect(f"{reverse('question', args=[q.id])}#answer-{answer.id}")
+    else:
+        form = AnswerForm()
+
+    answers_qs = q.answers.all().order_by('created_at')
+    answers_page = paginate(answers_qs, request, per_page=30)
+    return render(request, "question.html", {
+        "question": q,
+        "form": form,
+        "answers": answers_page.object_list,
+        "page_obj": answers_page
+    })
