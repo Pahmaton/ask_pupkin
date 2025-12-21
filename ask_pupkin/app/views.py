@@ -1,7 +1,9 @@
+from django.contrib import auth
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
+from app.forms import LoginForm
 from app.models import Profile, Question, Tag
 
 
@@ -56,10 +58,6 @@ def question(request, question_id):
         "page_obj": answers_page
     })
 
-# форма входа
-def login_form(request):
-    return render(request, "login.html")
-
 # форма регистрации (URL = /signup/)
 def register_form(request):
     return render(request, "register.html")
@@ -78,3 +76,21 @@ def best_members(request, username):
         return redirect("questions")
     member = get_object_or_404(Profile, user__username=username)
     return render(request, "best_members.html", {"member": member})
+
+# форма входа
+def login_view(request):
+    continue_url = request.GET.get('continue', 'questions')
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = auth.authenticate(request, **form.cleaned_data)
+            if user:
+                auth.login(request, user)
+                return redirect(continue_url)
+            else:
+                form.add_error(None, "Incorrect login or password")
+    else:
+        form = LoginForm()
+
+    return render(request, "login.html", {"form": form, "continue_url": continue_url})

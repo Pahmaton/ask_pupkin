@@ -5,8 +5,8 @@ from app.models import Answer, Question
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150, label="Username")
-    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    username = forms.CharField(max_length=150, label="Username", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password")
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Passwort")
