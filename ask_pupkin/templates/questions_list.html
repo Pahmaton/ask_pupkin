@@ -22,7 +22,7 @@
                     <div class="mt-auto">
                         <p class="mb-0">
                             <a href="{% url 'question' question.id %}" class="me-2">
-                                answers({{ question.answers.count }})
+                                answers({{ question.answers_count }})
                             </a>
                             Tags:
                             {% for tag in question.tags.all %}
