@@ -15,9 +15,7 @@ select = ["TID252", "F", "W", "I"]
 ban-relative-imports = "all"
 
 [tool.ruff.lint.isort]
-length-sort=true
 no-lines-before=["local-folder"]
-default-section = "first-party"
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ['app']
 known-third-party = ['django']

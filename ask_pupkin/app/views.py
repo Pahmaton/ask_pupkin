@@ -1,8 +1,8 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
+from django.shortcuts import get_object_or_404, redirect, render
 
-from app.models import Tag, Profile, Question
+from app.models import Profile, Question, Tag
 
 
 def paginate(objects_list, request, per_page=10):
