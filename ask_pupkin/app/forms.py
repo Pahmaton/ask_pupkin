@@ -42,11 +42,15 @@ class RegistrationForm(forms.ModelForm):
         return cleaned_data
 
 class QuestionForm(forms.ModelForm):
-    tags = forms.CharField(label="Tags (example: tag1,tag2,...)", required=False)
+    tags = forms.CharField(label="Tags (example: tag1,tag2,...)", required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Question
         fields = ['title', 'text']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 class AnswerForm(forms.ModelForm):
     class Meta:

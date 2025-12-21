@@ -1,10 +1,11 @@
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, QuestionForm, RegistrationForm
 from app.models import Profile, Question, Tag
 
 
@@ -59,10 +60,6 @@ def question(request, question_id):
         "page_obj": answers_page
     })
 
-# форма создания вопроса (URL = /ask/)
-def add_question_form(request):
-    return render(request, "add_question.html")
-
 # форма профиля
 def profile_form(request):
     return render(request, "profile.html")
@@ -108,3 +105,24 @@ def signup_view(request):
     else:
         form = RegistrationForm()
     return render(request, "register.html", {"form": form})
+
+# форма создания вопроса (URL = /ask/)
+@login_required
+def add_question_view(request):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user.profile
+            question.save()
+
+            tags_raw = form.cleaned_data['tags']
+            if tags_raw:
+                for tag_name in [t.strip() for t in tags_raw.split(',')]:
+                    tag, _ = Tag.objects.get_or_create(name=tag_name)
+                    question.tags.add(tag)
+
+            return redirect('question', question_id=question.id)
+    else:
+        form = QuestionForm()
+    return render(request, "add_question.html", {"form": form})

@@ -4,23 +4,39 @@
 {% endblock %}
 {% block main %}
 <h3 class="me-3 mt-2">New Question</h3>
-<form class="mt-4">
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+{% endif %}
+<form class="mt-4" method="post" action="{% url 'add_question' %}">
+    {% csrf_token %}
     <div class="row mb-3 align-items-center">
-        <label for="title" class="col-1 col-form-label text-start">Title</label>
+        <label for="{{ form.title.id_for_label }}" class="col-1 col-form-label text-start">Title</label>
         <div class="col-11">
-        <input type="text" class="form-control" id="title">
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="text-danger small">{{ form.title.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="message" class="col-1 col-form-label text-start">Text</label>
+        <label for="{{ form.text.id_for_label }}" class="col-1 col-form-label text-start">Text</label>
         <div class="col-11">
-        <textarea class="form-control" id="message" rows="4"></textarea>
+            {{ form.text }}
+            {% if form.text.errors %}
+                <div class="text-danger small">{{ form.text.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="tags" class="col-1 col-form-label text-start">Tags</label>
+        <label for="{{ form.tags.id_for_label }}" class="col-1 col-form-label text-start">Tags</label>
         <div class="col-11">
-        <input type="text" class="form-control" id="tags">
+            {{ form.tags }}
+            <div class="form-text">Enter tags separated by commas (e.g. python, django, web)</div>
+            {% if form.tags.errors %}
+                <div class="text-danger small">{{ form.tags.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">

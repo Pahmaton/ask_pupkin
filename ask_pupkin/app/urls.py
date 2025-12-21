@@ -11,7 +11,7 @@ urlpatterns = [
     path('question/<int:question_id>', views.question, name="question"),
     path('login/', views.login_view, name="login"),
     path('signup/', views.signup_view, name="register"),
-    path('ask/', views.add_question_form, name="add_question"),
+    path('ask/', views.add_question_view, name="add_question"),
     path('profile/', views.profile_form, name="profile"),
     path('best_member/<str:username>', views.best_members, name="best_member")
 ]
