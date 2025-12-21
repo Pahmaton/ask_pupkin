@@ -1,9 +1,10 @@
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
-from app.forms import LoginForm
+from app.forms import LoginForm, RegistrationForm
 from app.models import Profile, Question, Tag
 
 
@@ -58,10 +59,6 @@ def question(request, question_id):
         "page_obj": answers_page
     })
 
-# форма регистрации (URL = /signup/)
-def register_form(request):
-    return render(request, "register.html")
-
 # форма создания вопроса (URL = /ask/)
 def add_question_form(request):
     return render(request, "add_question.html")
@@ -94,3 +91,20 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, "login.html", {"form": form, "continue_url": continue_url})
+
+# форма регистрации (URL = /signup/)
+def signup_view(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            Profile.objects.create(user=user, avatar=form.cleaned_data['avatar'])
+            auth.login(request, user)
+            return redirect('questions')
+    else:
+        form = RegistrationForm()
+    return render(request, "register.html", {"form": form})

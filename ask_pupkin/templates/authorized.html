@@ -1,8 +1,8 @@
 {% load static %}
 <div class="d-flex align-items-center">
-    <img src="../../media/avatars/default.jpg" width="42" height="42" class="me-2">
+    <img src="{{ user.profile.avatar_url }}" width="42" height="42" class="me-2">
     <div class="d-flex flex-column">
-        Dr.Pepper
+        {{ user.username }}
         <div class="d-flex">
             <a href="{% url "profile" %}" class="me-2">settings</a>
             <a href="#">log out</a>

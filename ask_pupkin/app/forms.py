@@ -9,18 +9,36 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password")
 
 class RegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, label="Passwort")
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Password again")
-    avatar = forms.ImageField(required=False, label="Avatar")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Password"
+    )
+    password_confirm = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Repeat Password"
+    )
+    avatar = forms.ImageField(
+        required=False,
+        label="Avatar",
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get("password") != cleaned_data.get("password_confirm"):
-            raise forms.ValidationError("Passwords not same!")
+        pass1 = cleaned_data.get("password")
+        pass2 = cleaned_data.get("password_confirm")
+
+        if pass1 and pass2 and pass1 != pass2:
+            self.add_error('password_confirm', "Passwords do not match!")
+
         return cleaned_data
 
 class QuestionForm(forms.ModelForm):
