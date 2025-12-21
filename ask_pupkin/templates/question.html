@@ -6,7 +6,7 @@
 {% block main %}
 <div class="row">
     <div class="col-2 text-center">
-        <img src="{{ question.author.avatar.url }}"
+        <img src="{{ question.author.avatar_url }}"
              width="96" height="96" class="me-2 rounded-circle" alt="avatar image">
         <div class="vote-box mt-2">
             <button class="btn btn-outline-success vote-btn up">▲</button>
@@ -41,7 +41,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-1 text-center">
-                    <img src="{{ answer.author.avatar.url }}"
+                    <img src="{{ answer.author.avatar_url }}"
                          width="42" height="42" class="me-2 rounded-circle" alt="avatar image">
                     <div class="vote-box mt-2">
                         <button class="btn btn-outline-success vote-btn up">▲</button>
@@ -53,7 +53,7 @@
                 <div class="col-11 d-flex flex-column" style="padding-left: 12px;">
                     <p>{{ answer.text }}</p>
                     <div class="text-muted small mt-auto">
-                        Answered by: {{ answer.author.user.username }} • {{ answer.created_at|date:"Y-m-d H:i" }}
+                        Answered by: {{ answer.author.user.username }} • {{ answer.created_at|timesince }} ago
                     </div>
                 </div>
             </div>

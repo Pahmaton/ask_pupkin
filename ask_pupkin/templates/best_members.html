@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1>Best Member: {{ member.user.username }}</h1>
+</div>
+
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="row g-0">
+        <div class="col-md-4 p-3 d-flex flex-column align-items-center">
+            <img src="{{ member.avatar_url }}" class="img-fluid rounded-circle shadow-sm mb-3" alt="User Avatar" style="height: 200px;">
+            
+            <div class="text-center w-100">
+                <div class="h4 mb-1">{{ member.rating }}</div>
+                <div class="text-muted small text-uppercase">Rating</div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h3 class="card-title">{{ member.user.username }}</h3>
+                <p class="text-muted">Member since: {{ member.user.date_joined }}</p>
+                
+                <hr>
+                
+                <div class="mb-3">
+                    <h5>About Me</h5>
+                    <p class="card-text">
+                        {% lorem 1 b random %}
+                    </p>
+                </div>
+
+                <div class="row text-center bg-light rounded py-3 g-2">
+                    <div class="col-6 border-end">
+                        <div class="fw-bold h5 mb-0">{{ member.questions.count }}</div>
+                        <small class="text-muted">Questions</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="fw-bold h5 mb-0">{{ member.answers.count }}</div>
+                        <small class="text-muted">Answers</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}ъ

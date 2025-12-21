@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-1 text-center">
-                    <img src="{{ question.author.avatar.url }}" 
+                    <img src="{{ question.author.avatar_url }}" 
                          width="42" height="42">
                     <div class="vote-box mt-2">
                         <button class="btn btn-outline-success vote-btn up">▲</button>
@@ -22,7 +22,7 @@
                     <div class="mt-auto">
                         <p class="mb-0">
                             <a href="{% url 'question' question.id %}" class="me-2">
-                                answers({{ question.answers.count }})
+                                answers({{ question.answers_count }})
                             </a>
                             Tags:
                             {% for tag in question.tags.all %}
