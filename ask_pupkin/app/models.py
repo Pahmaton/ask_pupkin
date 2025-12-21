@@ -1,12 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth.models import User
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Django пользователь")
     avatar = models.ImageField(
-        upload_to='avatars/', 
-        blank=True, 
+        upload_to='avatars/',
+        blank=True,
         null=True,
         verbose_name="Аватарка"
     )
@@ -34,7 +35,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 class QuestionManager(models.Manager):
     def new(self):
         return self.order_by('-created_at')

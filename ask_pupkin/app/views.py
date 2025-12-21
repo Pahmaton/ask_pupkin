@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
 
-from .models import Question, Tag, Profile
+from app.models import Tag, Profile, Question
 
 
 def paginate(objects_list, request, per_page=10):
@@ -43,16 +43,16 @@ def questions_by_tag(request, tag):
 # страница одного вопроса со списком ответов (URL = /question/<id>/)
 def question(request, question_id):
     q = get_object_or_404(
-        Question.objects.select_related('author__user').prefetch_related('tags'), 
+        Question.objects.select_related('author__user').prefetch_related('tags'),
         pk=question_id
     )
-    
+
     answers_qs = q.answers.select_related('author__user').order_by('created_at')
-    
+
     answers_page = paginate(answers_qs, request, per_page=30)
     return render(request, "question.html", {
-        "question": q, 
-        "answers": answers_page.object_list, 
+        "question": q,
+        "answers": answers_page.object_list,
         "page_obj": answers_page
     })
 

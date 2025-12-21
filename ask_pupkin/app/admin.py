@@ -1,12 +1,14 @@
 from django.contrib import admin
-from .models import (
-    Profile,
+
+from app.models import (
     Tag,
-    Question,
     Answer,
-    QuestionLike,
+    Profile,
+    Question,
     AnswerLike,
+    QuestionLike,
 )
+
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

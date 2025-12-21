@@ -1,10 +1,12 @@
-from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from app.models import Profile, Tag, Question, Answer, QuestionLike, AnswerLike
-from django.db import transaction
-from faker import Faker
 import random
+
+from django.db import transaction
+from django.contrib.auth.models import User
+from django.core.management.base import BaseCommand
+
 from tqdm import tqdm
+from faker import Faker
+from app.models import Tag, Answer, Profile, Question, AnswerLike, QuestionLike
 
 fake = Faker()
 
