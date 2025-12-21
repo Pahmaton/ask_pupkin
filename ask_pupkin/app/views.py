@@ -106,8 +106,13 @@ def signup_view(request):
         form = RegistrationForm()
     return render(request, "register.html", {"form": form})
 
+# выход
+def logout_view(request):
+    auth.logout(request)
+    return redirect(request.META.get('HTTP_REFERER', 'questions'))
+
 # форма создания вопроса (URL = /ask/)
-@login_required
+@login_required(login_url="/login/", redirect_field_name="continue")
 def add_question_view(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST)

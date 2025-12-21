@@ -5,7 +5,7 @@
         {{ user.username }}
         <div class="d-flex">
             <a href="{% url "profile" %}" class="me-2">settings</a>
-            <a href="#">log out</a>
+            <a href="{% url "logout" %}">log out</a>
         </div>
     </div>
 </div>
