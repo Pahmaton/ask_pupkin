@@ -1,16 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Django пользователь")
     avatar = models.ImageField(
         upload_to='avatars/', 
-        default='avatars/default.jpg', 
         blank=True, 
         null=True,
         verbose_name="Аватарка"
     )
     rating = models.IntegerField(default=0, verbose_name="Рейтинг")
+
+    @property
+    def avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar_url
+        return f"{settings.MEDIA_URL}/avatars/default.jpg"
 
     class Meta:
         verbose_name = "Профиль"
