@@ -1,17 +1,24 @@
+import environ
+import os
 from pathlib import Path
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-uh*zp5+7=s%fo(ekz(7g9p*03t@i7tmf9-5g^+@&$+81%n*88o'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -64,14 +71,7 @@ WSGI_APPLICATION = 'ask_pupkin.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_db',
-        'USER': 'django_user',
-        'PASSWORD': 'django_pass',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db()
 }
 
 DATABASES = {
