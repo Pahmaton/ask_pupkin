@@ -6,7 +6,7 @@ from django.db import models
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Django пользователь")
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to='uploads/',
         blank=True,
         null=True,
         verbose_name="Аватарка"
