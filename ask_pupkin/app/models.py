@@ -66,6 +66,7 @@ class Answer(models.Model):
     text = models.TextField(verbose_name="Текст")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время создания")
     rating = models.IntegerField(default=0, verbose_name="Рейтинг")
+    is_correct = models.BooleanField(default=False, verbose_name="Правильный ответ")
 
     class Meta:
         verbose_name="Ответ"
