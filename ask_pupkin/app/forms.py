@@ -63,3 +63,28 @@ class AnswerForm(forms.ModelForm):
                 'placeholder': 'Enter your answer here...'
             }),
         }
+
+class ProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def __init__(self, *args, **kwargs):
+        profile = kwargs.pop('profile', None)
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        if profile:
+            self.fields['avatar'].initial = profile.avatar
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            profile = user.profile
+            if self.cleaned_data.get('avatar'):
+                profile.avatar = self.cleaned_data['avatar']
+            profile.save()
+        return user

@@ -12,7 +12,7 @@ urlpatterns = [
     path('login/', views.login_view, name="login"),
     path('signup/', views.signup_view, name="register"),
     path('ask/', views.add_question_view, name="add_question"),
-    path('profile/', views.profile_form, name="profile"),
+    path('profile/edit/', views.profile_edit, name="profile"),
     path('best_member/<str:username>', views.best_members, name="best_member"),
     path('logout/', views.logout_view, name="logout")
 ]

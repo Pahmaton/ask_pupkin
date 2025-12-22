@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from app.forms import AnswerForm, LoginForm, QuestionForm, RegistrationForm
+from app.forms import AnswerForm, LoginForm, ProfileForm, QuestionForm, RegistrationForm
 from app.models import Profile, Question, Tag
 
 
@@ -43,10 +43,6 @@ def questions_by_tag(request, tag):
     qs = tag_obj.questions.all().select_related('author__user').prefetch_related('tags').annotate(answers_count=Count('answers'))
     page = paginate(qs, request, per_page=20)
     return render(request, "questions_by_tag.html", {"questions": page.object_list, "page_obj": page, "tag": tag_obj})
-
-# форма профиля
-def profile_form(request):
-    return render(request, "profile.html")
 
 # страница лучших пользователей сайта
 def best_members(request, username):
@@ -142,3 +138,18 @@ def question_view(request, question_id):
         "answers": answers_page.object_list,
         "page_obj": answers_page
     })
+
+# форма редактирования профиля
+@login_required(login_url="/login/", redirect_field_name="continue")
+def profile_edit(request):
+    if request.method == 'POST':
+        user_instance = User.objects.get(pk=request.user.pk)
+        form = ProfileForm(request.POST, request.FILES, instance=user_instance, profile=request.user.profile)
+
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=request.user, profile=request.user.profile)
+
+    return render(request, "profile.html", {"form": form})
