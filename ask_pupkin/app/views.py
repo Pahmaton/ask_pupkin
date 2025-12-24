@@ -2,12 +2,14 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count
+from django.db.models import Count, Sum
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from app.forms import AnswerForm, LoginForm, ProfileForm, QuestionForm, RegistrationForm
-from app.models import Profile, Question, Tag
+from app.models import Answer, AnswerLike, Profile, Question, QuestionLike, Tag
 
 
 def paginate(objects_list, request, per_page=10):
@@ -153,3 +155,60 @@ def profile_edit(request):
         form = ProfileForm(instance=request.user, profile=request.user.profile)
 
     return render(request, "profile.html", {"form": form})
+
+# вьюха изменения рейтинга пользователем
+@login_required
+@require_POST
+def vote(request):
+    obj_id = request.POST.get('id')
+    obj_type = request.POST.get('type')
+    action = request.POST.get('action')
+    val = 1 if action == 'like' else -1
+
+    user_profile = request.user.profile
+
+    if obj_type == 'question':
+        obj = get_object_or_404(Question, pk=obj_id)
+        like_model = QuestionLike
+        lookup = {'question': obj, 'user': user_profile}
+    else:
+        obj = get_object_or_404(Answer, pk=obj_id)
+        like_model = AnswerLike
+        lookup = {'answer': obj, 'user': user_profile}
+
+    existing_like = like_model.objects.filter(**lookup).first()
+
+    if existing_like:
+        if existing_like.value == val:
+            existing_like.delete()
+        else:
+            existing_like.value = val
+            existing_like.save()
+    else:
+        like_model.objects.create(**lookup, value=val)
+
+    new_rating = like_model.objects.filter(**{obj_type: obj}).aggregate(Sum('value'))['value__sum'] or 0
+    obj.rating = new_rating
+    obj.save()
+
+    return JsonResponse({'new_rating': new_rating})
+
+# отметить что ответ правильный
+@login_required
+@require_POST
+def mark_correct(request):
+    q_id = request.POST.get('question_id')
+    a_id = request.POST.get('answer_id')
+
+    question = get_object_or_404(Question, id=q_id)
+
+    if question.author.user != request.user:
+        return JsonResponse({'error': 'Not authorized'}, status=403)
+
+    question.answers.all().update(is_correct=False)
+
+    answer = get_object_or_404(Answer, id=a_id, question=question)
+    answer.is_correct = True
+    answer.save()
+
+    return JsonResponse({'status': 'ok'})
