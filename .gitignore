@@ -214,5 +214,8 @@ __marimo__/
 # django media
 ask_pupkin/media/uploads/*
 
+# django staticfiles
+ask_pupkin/staticfiles
+
 # mac
 .DS_Store
