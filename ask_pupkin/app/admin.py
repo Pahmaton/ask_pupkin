@@ -103,7 +103,6 @@ class QuestionAdmin(admin.ModelAdmin):
         QuestionLikeInline,
     )
 
-# TODO добавлено новое поле
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = (
