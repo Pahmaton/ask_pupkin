@@ -1,0 +1,24 @@
+<aside class="mt-5">
+    <h3>Popular Tags</h3>
+    <div>
+        {% for tag in popular_tags %}
+            <a href="{% url 'questions_by_tag' tag.name %}" 
+               class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover me-3">
+               {{ tag.name }}
+            </a>
+        {% empty %}
+            <p>No tags yet</p>
+        {% endfor %}
+    </div>
+
+    <h3 class="mt-3">Best Members</h3>
+    {% for member in best_members %}
+        <div class="mb-2">
+            <a href="{% url 'best_member' member.user.username %}">
+                {{ member.user.username }}
+            </a>
+        </div>
+    {% empty %}
+        <p>No best members yet</p>
+    {% endfor %}
+</aside>

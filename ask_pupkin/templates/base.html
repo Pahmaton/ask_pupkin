@@ -37,25 +37,8 @@
                 </main>
             </div>
             <div class="col-3">
-                <aside class="mt-5">
-                    <h3>Popular Tags</h3>
-                    <div>
-                        <a href="{% url "questions_by_tag" "perl" %}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover me-3">perl</a>
-                        <a href="{% url "questions_by_tag" "python" %}" class="link-danger link-underline-opacity-0 link-underline-opacity-100-hover me-3">python</a>
-                        <a href="{% url "questions_by_tag" "TechnoPark" %}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover me-3">TechnoPark</a>
-                        <a href="{% url "questions_by_tag" "MySQL" %}" class="link-danger link-underline-opacity-0 link-underline-opacity-100-hover me-3">MySQL</a>
-                        <a href="{% url "questions_by_tag" "django" %}" class="link-success link-underline-opacity-0 link-underline-opacity-100-hover me-3">django</a>
-                        <a href="{% url "questions_by_tag" "Mail.Ru" %}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover me-3">Mail.Ru</a>
-                        <a href="{% url "questions_by_tag" "Voloshin" %}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover me-3">Voloshin</a>
-                        <a href="{% url "questions_by_tag" "Firefox" %}" class="link-warning link-underline-opacity-0 link-underline-opacity-100-hover me-3">Firefox</a>
-                    </div>
-                    <h3 class="mt-3">Best Members</h3>
-                    <div class="mb-2"><a href="{% url "best_member" "MrFreeman" %}">MrFreeman</a></div>
-                    <div class="mb-2"><a href="{% url "best_member" "DrHouse" %}">DrHouse</a></div>
-                    <div class="mb-2"><a href="{% url "best_member" "Bender" %}">Bender</a></div>
-                    <div class="mb-2"><a href="{% url "best_member" "QueenVictoria" %}">QueenVictoria</a></div>
-                    <div class="mb-2"><a href="{% url "best_member" "V_Pupkin" %}">V_Pupkin</a></div>
-                </aside>
+                {% load sidebar_tags %}
+                {% show_sidebar %}
             </div>
         </div>
     </div>
