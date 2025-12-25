@@ -6,7 +6,7 @@ from django.db import models
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Django пользователь")
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to='uploads/',
         blank=True,
         null=True,
         verbose_name="Аватарка"
@@ -66,6 +66,7 @@ class Answer(models.Model):
     text = models.TextField(verbose_name="Текст")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время создания")
     rating = models.IntegerField(default=0, verbose_name="Рейтинг")
+    is_correct = models.BooleanField(default=False, verbose_name="Правильный ответ")
 
     class Meta:
         verbose_name="Ответ"

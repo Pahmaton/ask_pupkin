@@ -14,7 +14,9 @@ urlpatterns = [
     path('ask/', views.add_question_view, name="add_question"),
     path('profile/edit/', views.profile_edit, name="profile"),
     path('best_member/<str:username>', views.best_members, name="best_member"),
-    path('logout/', views.logout_view, name="logout")
+    path('logout/', views.logout_view, name="logout"),
+    path('vote/', views.vote, name='vote'),
+    path('mark_correct/', views.mark_correct, name='mark_correct'),
 ]
 
 if settings.DEBUG:
