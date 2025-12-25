@@ -61,33 +61,46 @@ $('.js-correct-answer').on('change', function() {
     });
 });
 
+const searchInput = document.getElementById('search-input');
+const resultsContainer = document.getElementById('search-results');
 let debounceTimer;
-const searchInput = document.querySelector('input[type="search"]');
-const resultsContainer = document.createElement('div');
-resultsContainer.className = 'list-group position-absolute w-100';
-searchInput.parentElement.appendChild(resultsContainer);
 
 searchInput.addEventListener('input', function() {
     clearTimeout(debounceTimer);
-    const query = this.value;
+    const query = this.value.trim();
 
     if (query.length < 3) {
+        resultsContainer.style.display = 'none';
         resultsContainer.innerHTML = '';
         return;
     }
 
     debounceTimer = setTimeout(() => {
-        fetch(`/search-suggestions/?q=${query}`)
+        fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 resultsContainer.innerHTML = '';
-                data.suggestions.forEach(item => {
-                    const link = document.createElement('a');
-                    link.href = `/question/${item.id}`;
-                    link.className = 'list-group-item list-group-item-action';
-                    link.innerText = item.title;
-                    resultsContainer.appendChild(link);
-                });
-            });
+                
+                if (data.suggestions.length > 0) {
+                    data.suggestions.forEach(item => {
+                        const row = document.createElement('a');
+                        row.href = `/question/${item.id}`;
+                        row.className = 'dropdown-item p-2 border-bottom search-item-truncate';
+                        row.innerText = item.title;
+                        row.title = item.title;
+                        resultsContainer.appendChild(row);
+                    });
+                    resultsContainer.style.display = 'block';
+                } else {
+                    resultsContainer.style.display = 'none';
+                }
+            })
+            .catch(err => console.error('Search error:', err));
     }, 300);
+});
+
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+        resultsContainer.style.display = 'none';
+    }
 });

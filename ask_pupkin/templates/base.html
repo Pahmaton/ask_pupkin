@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/vote-box.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 </head>
 <body>
@@ -16,8 +17,16 @@
         <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'questions' %}"><h2>AskPupkin</h2></a>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <form class="d-flex position-relative" role="search" id="search-form" autocomplete="off">
+                    <input 
+                        id="search-input" 
+                        class="form-control me-2" 
+                        type="search" 
+                        placeholder="Search" 
+                        aria-label="Search"
+                    />
+                    <div id="search-results" class="dropdown-menu w-100 shadow" style="display: none; top: 100%; z-index: 1050;">
+                    </div>
                 </form>
                 <a href="{% url "add_question" %}" class="btn btn-outline-success">ASK!</a>
                 {% if user.is_authenticated %}
