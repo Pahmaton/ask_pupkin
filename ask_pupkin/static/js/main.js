@@ -60,3 +60,47 @@ $('.js-correct-answer').on('change', function() {
         }
     });
 });
+
+const searchInput = document.getElementById('search-input');
+const resultsContainer = document.getElementById('search-results');
+let debounceTimer;
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
+
+    if (query.length < 3) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = '';
+        return;
+    }
+
+    debounceTimer = setTimeout(() => {
+        fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = '';
+                
+                if (data.suggestions.length > 0) {
+                    data.suggestions.forEach(item => {
+                        const row = document.createElement('a');
+                        row.href = `/question/${item.id}`;
+                        row.className = 'dropdown-item p-2 border-bottom search-item-truncate';
+                        row.innerText = item.title;
+                        row.title = item.title;
+                        resultsContainer.appendChild(row);
+                    });
+                    resultsContainer.style.display = 'block';
+                } else {
+                    resultsContainer.style.display = 'none';
+                }
+            })
+            .catch(err => console.error('Search error:', err));
+    }, 300);
+});
+
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+        resultsContainer.style.display = 'none';
+    }
+});

@@ -1,0 +1,18 @@
+{
+  "client": {
+    "allowed_origins": [
+      "http://localhost:8000",
+      "http://127.0.0.1:8000"
+    ],
+    "anonymous": true,
+    "insecure": true
+  },
+  "admin": {
+    "enabled": true,
+    "password": "GSblJ67fba90SKOiecVfgw",
+    "secret": "5sz_WsFH01i2xikWSv10jgeo5EujnlDNdo1umv-tuRO056sx_-3o4g9tFuxbHI0T80iSKFADyAq1TGl0CXXARA"
+  },
+  "http_api": {
+    "key": "oUrns-ulRUyVMYzSbko8uDUTg7FxrXg-at6CxP6WlIEpJCO0QaoO-fF6e3NWH0B6Z5pM_XXTPQp0dXiu-0v5iw"
+  }
+}

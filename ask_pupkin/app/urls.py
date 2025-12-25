@@ -17,6 +17,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name="logout"),
     path('vote/', views.vote, name='vote'),
     path('mark_correct/', views.mark_correct, name='mark_correct'),
+    path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
 ]
 
 if settings.DEBUG:

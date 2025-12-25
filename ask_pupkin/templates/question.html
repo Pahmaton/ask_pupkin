@@ -32,7 +32,7 @@
 
 <hr>
 
-<div class="col mt-3">
+<div class="col mt-3" id="answers-list">
     {% for answer in answers %}
         <div class="card mb-3" id="answer-{{ answer.id }}">
             <div class="card-body">
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-        {% endfor %}
+    {% endfor %}
     {% include 'pagination.html' %}
 </div>
 <hr>
@@ -83,5 +83,22 @@
 
     <button class="btn btn-primary" type="submit">Answer</button>
 </form>
+<script src="{% static "js/centrifuge.js" %}"></script>
 
+<script>
+    const centrifuge = new Centrifuge('ws://localhost:8010/connection/websocket');
+
+    const questionId = "{{ question.id }}";
+    const sub = centrifuge.newSubscription("question_" + questionId);
+
+    sub.on('publication', function(ctx) {
+        const answersList = document.getElementById('answers-list');
+        if (ctx.data && ctx.data.html) {
+            answersList.insertAdjacentHTML('beforeend', ctx.data.html);
+        }
+    });
+
+    sub.subscribe();
+    centrifuge.connect();
+</script>
 {% endblock %}

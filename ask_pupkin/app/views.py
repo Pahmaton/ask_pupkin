@@ -1,10 +1,14 @@
+import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVector
+from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
@@ -48,10 +52,19 @@ def questions_by_tag(request, tag):
 
 # страница лучших пользователей сайта
 def best_members(request, username):
-    if username not in ["MrFreeman", "DrHouse", "Bender", "QueenVictoria", "V_Pupkin"]:
+    best_members = cache.get("best_members", [])
+    usernames = {u.user.username for u in best_members}
+    if username not in usernames:
         return redirect("questions")
     member = get_object_or_404(Profile, user__username=username)
-    return render(request, "best_members.html", {"member": member})
+    return render(
+        request,
+        "best_members.html",
+        {
+            "member": member,
+            "best_members": best_members,
+        }
+    )
 
 # форма входа
 def login_view(request):
@@ -128,6 +141,24 @@ def question_view(request, question_id):
             answer.author = request.user.profile
             answer.question = q
             answer.save()
+
+            html = render_to_string('answer_item.html', {'answer': answer})
+
+            try:
+                requests.post(
+                    "http://localhost:8010/api",
+                    json={
+                        "method": "publish",
+                        "params": {
+                            "channel": f"question_{q.id}",
+                            "data": {"html": html}
+                        }
+                    },
+                    headers={'X-API-Key': 'oUrns-ulRUyVMYzSbko8uDUTg7FxrXg-at6CxP6WlIEpJCO0QaoO-fF6e3NWH0B6Z5pM_XXTPQp0dXiu-0v5iw'}
+                )
+            except requests.exceptions.RequestException:
+                pass
+
             return redirect(f"{reverse('question', args=[q.id])}#answer-{answer.id}")
     else:
         form = AnswerForm()
@@ -212,3 +243,16 @@ def mark_correct(request):
     answer.save()
 
     return JsonResponse({'status': 'ok'})
+
+# для поисковых подсказок
+def search_suggestions(request):
+    query = request.GET.get('q', '')
+    if len(query) < 3:
+        return JsonResponse({'suggestions': []})
+
+    results = Question.objects.annotate(
+        search=SearchVector('title', 'text'),
+    ).filter(search=query)[:5]
+
+    suggestions = [{'id': q.id, 'title': q.title} for q in results]
+    return JsonResponse({'suggestions': suggestions})
