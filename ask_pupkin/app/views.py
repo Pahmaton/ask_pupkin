@@ -1,3 +1,4 @@
+import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -5,6 +6,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
@@ -128,6 +130,24 @@ def question_view(request, question_id):
             answer.author = request.user.profile
             answer.question = q
             answer.save()
+
+            html = render_to_string('answer_item.html', {'answer': answer})
+
+            try:
+                requests.post(
+                    "http://localhost:8010/api",
+                    json={
+                        "method": "publish",
+                        "params": {
+                            "channel": f"question_{q.id}",
+                            "data": {"html": html}
+                        }
+                    },
+                    headers={'X-API-Key': 'oUrns-ulRUyVMYzSbko8uDUTg7FxrXg-at6CxP6WlIEpJCO0QaoO-fF6e3NWH0B6Z5pM_XXTPQp0dXiu-0v5iw'}
+                )
+            except requests.exceptions.RequestException:
+                pass
+
             return redirect(f"{reverse('question', args=[q.id])}#answer-{answer.id}")
     else:
         form = AnswerForm()

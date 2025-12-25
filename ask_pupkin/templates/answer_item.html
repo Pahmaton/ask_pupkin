@@ -1,0 +1,19 @@
+<div class="card mb-3" id="answer-{{ answer.id }}">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-1 text-center">
+                <img src="{{ answer.author.avatar_url }}" width="42" height="42" class="rounded-circle">
+                
+                <div class="vote-box mt-2" data-id="{{ answer.id }}" data-type="answer">
+                    <button class="btn btn-outline-success vote-btn js-vote" data-action="like">▲</button>
+                    <span class="vote-count">{{ answer.rating }}</span>
+                    <button class="btn btn-outline-danger vote-btn js-vote" data-action="dislike">▼</button>
+                </div>
+            </div>
+
+            <div class="col-11 d-flex flex-column">
+                <p>{{ answer.text }}</p>
+            </div>
+        </div>
+    </div>
+</div>

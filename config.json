@@ -1,12 +1,14 @@
 {
   "client": {
-    "token": {
-      "hmac_secret_key": "W-GVBHCwdBWtI_RoGyVcnDeoXEjseP0HIaCYnIo_trtVtJ4ltRwDIyo-YBxgWQVen3U8pex-KfFuSunNdZ8C0A"
-    },
-    "allowed_origins": []
+    "allowed_origins": [
+      "http://localhost:8000",
+      "http://127.0.0.1:8000"
+    ],
+    "anonymous": true,
+    "insecure": true
   },
   "admin": {
-    "enabled": false,
+    "enabled": true,
     "password": "GSblJ67fba90SKOiecVfgw",
     "secret": "5sz_WsFH01i2xikWSv10jgeo5EujnlDNdo1umv-tuRO056sx_-3o4g9tFuxbHI0T80iSKFADyAq1TGl0CXXARA"
   },
