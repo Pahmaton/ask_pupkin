@@ -2,6 +2,7 @@ import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Sum
 from django.http import JsonResponse
@@ -50,10 +51,19 @@ def questions_by_tag(request, tag):
 
 # страница лучших пользователей сайта
 def best_members(request, username):
-    if username not in ["MrFreeman", "DrHouse", "Bender", "QueenVictoria", "V_Pupkin"]:
+    best_members = cache.get("best_members", [])
+    usernames = {u.user.username for u in best_members}
+    if username not in usernames:
         return redirect("questions")
     member = get_object_or_404(Profile, user__username=username)
-    return render(request, "best_members.html", {"member": member})
+    return render(
+        request,
+        "best_members.html",
+        {
+            "member": member,
+            "best_members": best_members,
+        }
+    )
 
 # форма входа
 def login_view(request):
