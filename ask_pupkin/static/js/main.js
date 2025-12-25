@@ -60,3 +60,34 @@ $('.js-correct-answer').on('change', function() {
         }
     });
 });
+
+let debounceTimer;
+const searchInput = document.querySelector('input[type="search"]');
+const resultsContainer = document.createElement('div');
+resultsContainer.className = 'list-group position-absolute w-100';
+searchInput.parentElement.appendChild(resultsContainer);
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const query = this.value;
+
+    if (query.length < 3) {
+        resultsContainer.innerHTML = '';
+        return;
+    }
+
+    debounceTimer = setTimeout(() => {
+        fetch(`/search-suggestions/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = '';
+                data.suggestions.forEach(item => {
+                    const link = document.createElement('a');
+                    link.href = `/question/${item.id}`;
+                    link.className = 'list-group-item list-group-item-action';
+                    link.innerText = item.title;
+                    resultsContainer.appendChild(link);
+                });
+            });
+    }, 300);
+});

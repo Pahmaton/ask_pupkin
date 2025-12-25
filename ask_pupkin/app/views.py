@@ -2,6 +2,7 @@ import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVector
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Sum
@@ -242,3 +243,16 @@ def mark_correct(request):
     answer.save()
 
     return JsonResponse({'status': 'ok'})
+
+# для поисковых подсказок
+def search_suggestions(request):
+    query = request.GET.get('q', '')
+    if len(query) < 3:
+        return JsonResponse({'suggestions': []})
+
+    results = Question.objects.annotate(
+        search=SearchVector('title', 'text'),
+    ).filter(search=query)[:5]
+
+    suggestions = [{'id': q.id, 'title': q.title} for q in results]
+    return JsonResponse({'suggestions': suggestions})
