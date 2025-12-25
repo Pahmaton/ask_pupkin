@@ -1,8 +1,13 @@
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-from app.models import Tag, Profile, Question
+from app.forms import AnswerForm, LoginForm, ProfileForm, QuestionForm, RegistrationForm
+from app.models import Profile, Question, Tag
 
 
 def paginate(objects_list, request, per_page=10):
@@ -39,42 +44,112 @@ def questions_by_tag(request, tag):
     page = paginate(qs, request, per_page=20)
     return render(request, "questions_by_tag.html", {"questions": page.object_list, "page_obj": page, "tag": tag_obj})
 
-
-# страница одного вопроса со списком ответов (URL = /question/<id>/)
-def question(request, question_id):
-    q = get_object_or_404(
-        Question.objects.select_related('author__user').prefetch_related('tags'),
-        pk=question_id
-    )
-
-    answers_qs = q.answers.select_related('author__user').order_by('created_at')
-
-    answers_page = paginate(answers_qs, request, per_page=30)
-    return render(request, "question.html", {
-        "question": q,
-        "answers": answers_page.object_list,
-        "page_obj": answers_page
-    })
-
-# форма входа
-def login_form(request):
-    return render(request, "login.html")
-
-# форма регистрации (URL = /signup/)
-def register_form(request):
-    return render(request, "register.html")
-
-# форма создания вопроса (URL = /ask/)
-def add_question_form(request):
-    return render(request, "add_question.html")
-
-# форма профиля
-def profile_form(request):
-    return render(request, "profile.html")
-
 # страница лучших пользователей сайта
 def best_members(request, username):
     if username not in ["MrFreeman", "DrHouse", "Bender", "QueenVictoria", "V_Pupkin"]:
         return redirect("questions")
     member = get_object_or_404(Profile, user__username=username)
     return render(request, "best_members.html", {"member": member})
+
+# форма входа
+def login_view(request):
+    continue_url = request.GET.get('continue', 'questions')
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = auth.authenticate(request, **form.cleaned_data)
+            if user:
+                auth.login(request, user)
+                return redirect(continue_url)
+            else:
+                form.add_error(None, "Incorrect login or password")
+    else:
+        form = LoginForm()
+
+    return render(request, "login.html", {"form": form, "continue_url": continue_url})
+
+# форма регистрации (URL = /signup/)
+def signup_view(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            Profile.objects.create(user=user, avatar=form.cleaned_data['avatar'])
+            auth.login(request, user)
+            return redirect('questions')
+    else:
+        form = RegistrationForm()
+    return render(request, "register.html", {"form": form})
+
+# выход
+def logout_view(request):
+    auth.logout(request)
+    return redirect(request.META.get('HTTP_REFERER', 'questions'))
+
+# форма создания вопроса (URL = /ask/)
+@login_required(login_url="/login/", redirect_field_name="continue")
+def add_question_view(request):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user.profile
+            question.save()
+
+            tags_raw = form.cleaned_data['tags']
+            if tags_raw:
+                for tag_name in [t.strip() for t in tags_raw.split(',')]:
+                    tag, _ = Tag.objects.get_or_create(name=tag_name)
+                    question.tags.add(tag)
+
+            return redirect('question', question_id=question.id)
+    else:
+        form = QuestionForm()
+    return render(request, "add_question.html", {"form": form})
+
+# страница одного вопроса со списком ответов (URL = /question/<id>/)
+def question_view(request, question_id):
+    q = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user.profile
+            answer.question = q
+            answer.save()
+            return redirect(f"{reverse('question', args=[q.id])}#answer-{answer.id}")
+    else:
+        form = AnswerForm()
+
+    answers_qs = q.answers.all().order_by('created_at')
+    answers_page = paginate(answers_qs, request, per_page=30)
+    return render(request, "question.html", {
+        "question": q,
+        "form": form,
+        "answers": answers_page.object_list,
+        "page_obj": answers_page
+    })
+
+# форма редактирования профиля
+@login_required(login_url="/login/", redirect_field_name="continue")
+def profile_edit(request):
+    if request.method == 'POST':
+        user_instance = User.objects.get(pk=request.user.pk)
+        form = ProfileForm(request.POST, request.FILES, instance=user_instance, profile=request.user.profile)
+
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=request.user, profile=request.user.profile)
+
+    return render(request, "profile.html", {"form": form})

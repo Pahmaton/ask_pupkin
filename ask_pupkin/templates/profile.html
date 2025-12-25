@@ -1,32 +1,38 @@
 {% extends "base.html" %}
-{% block account %}
-{% include "authorized.html" %}
-{% endblock account %}
 {% block main %}
-<h3 class="me-3 mt-2">Settings: Dr. Pepper</h3>
-<form class="mt-4">
+<h3 class="me-3 mt-2">Settings: {{ request.user.username }}</h3>
+<form class="mt-4" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
     <div class="row mb-3 align-items-center">
-        <label for="login" class="col-2 col-form-label text-start">Login</label>
+        <label for="{{ form.username.id_for_label }}" class="col-2 col-form-label text-start">Login</label>
         <div class="col-10">
-        <input type="text" class="form-control" id="login">
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger small">{{ form.username.errors }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="email" class="col-2 col-form-label text-start">Email</label>
+        <label for="{{ form.email.id_for_label }}" class="col-2 col-form-label text-start">Email</label>
         <div class="col-10">
-        <input type="email" class="form-control" id="email">
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger small">{{ form.email.errors }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="nickname" class="col-2 col-form-label text-start">NickName</label>
+        <label for="{{ form.avatar.id_for_label }}" class="col-2 col-form-label text-start">Upload avatar</label>
         <div class="col-10">
-        <input type="text" class="form-control" id="nickname">
-        </div>
-    </div>
-    <div class="row mb-3 align-items-center">
-        <label for="formFile" class="col-2 col-form-label text-start">Upload avatar</label>
-        <div class="col-10">
-        <input class="form-control" type="file" id="formFile">
+            {{ form.avatar }}
+            {% if form.avatar.errors %}
+                <div class="text-danger small">{{ form.avatar.errors }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">

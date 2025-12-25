@@ -18,8 +18,11 @@
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
                 </form>
                 <a href="{% url "add_question" %}" class="btn btn-outline-success">ASK!</a>
-                {% block account %}
-                {% endblock %}
+                {% if user.is_authenticated %}
+                {% include "authorized.html" %}
+                {% else %}
+                {% include "unauthorized.html" %}
+                {% endif%}
             </div>
         </nav>
     </header>

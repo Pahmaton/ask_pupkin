@@ -1,47 +1,56 @@
 {% extends "base.html" %}
-{% block account %}
-{% include "unauthorized.html" %}
-{% endblock %}
 {% block main %}
 <h3 class="me-3 mt-2">Registration</h3>
-{% if error %}
-<div class="text-danger">Sorry, this email address allready registred!</div>
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
 {% endif %}
-<form class="mt-4">
+<form class="mt-4" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="row mb-3 align-items-center">
-        <label for="login" class="col-3 col-form-label text-start">Login</label>
+        <label for="{{ form.username.id_for_label }}" class="col-3 col-form-label text-start">Login</label>
         <div class="col-9">
-        <input type="text" class="form-control" id="login">
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger small">{{ form.username.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="email" class="col-3 col-form-label text-start">Email</label>
+        <label for="{{ form.email.id_for_label }}" class="col-3 col-form-label text-start">Email</label>
         <div class="col-9">
-        <input type="email" class="form-control" id="email">
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger small">{{ form.email.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="nickname" class="col-3 col-form-label text-start">NickName</label>
+        <label for="{{ form.avatar.id_for_label }}" class="col-3 col-form-label text-start">Upload avatar</label>
         <div class="col-9">
-        <input type="text" class="form-control" id="nickname">
+            {{ form.avatar }}
+            {% if form.avatar.errors %}
+                <div class="text-danger small">{{ form.avatar.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="formFile" class="col-3 col-form-label text-start">Upload avatar</label>
+        <label for="{{ form.password.id_for_label }}" class="col-3 col-form-label text-start">Password</label>
         <div class="col-9">
-        <input class="form-control" type="file" id="formFile">
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="text-danger small">{{ form.password.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
-        <label for="password" class="col-3 col-form-label text-start">Password</label>
+        <label for="{{ form.password_confirm.id_for_label }}" class="col-3 col-form-label text-start">Repeat password</label>
         <div class="col-9">
-        <input class="form-control" type="password">
-        </div>
-    </div>
-    <div class="row mb-3 align-items-center">
-        <label for="repeat_password" class="col-3 col-form-label text-start">Repeat password</label>
-        <div class="col-9">
-        <input class="form-control" type="password" id="repeat_password">
+            {{ form.password_confirm }}
+            {% if form.password_confirm.errors %}
+                <div class="text-danger small">{{ form.password_confirm.errors|join:", " }}</div>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-3 align-items-center">
